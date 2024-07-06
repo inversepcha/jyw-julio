@@ -1,0 +1,397 @@
+<div class="flex items-start justify-between">
+    <div class="grid grid-cols-2 gap-x-4 gap-y-1" *ngIf="detallesOrden" >
+      <div class="text-4xl tracking-tight text-secondary">Proyecto</div>
+      <div class="text-4xl">{{detallesOrden.proyecto}}</div>
+      <div class="font-medium tracking-tight text-secondary">Sub-proyecto</div>
+      <div class="font-medium">{{detallesOrden.subProyecto}}</div>
+      <div class="font-medium tracking-tight text-secondary">Consecutivo</div>
+      <div class="font-medium">{{detallesOrden.orden_consecutivo}}</div>
+      <div class="font-medium tracking-tight text-secondary">Fecha de inicio</div>
+      <div class="font-medium">{{detallesOrden.fecha_visita | date : 'mediumDate'}}</div>
+      <div class="font-medium tracking-tight text-secondary">Lugar de inspección</div>
+      <div class="font-medium">{{detallesOrden.lugar_visita}}</div>
+    </div>
+</div>
+
+<div class="projects-section-header">
+    <div class="flex sm items-start sm:items-center sm:justify-between py-8 px-6 px-8">
+      <div>
+        <div class="text-3xl font-extrabold tracking-tight leading-none">Informe de adherencia de pintura</div>
+      </div>
+    </div>
+</div>
+
+<form class="p-3 bg-card shadow rounded overflow-hidden" [formGroup]="Normas" *ngIf="autoSaveIndex">
+    <mat-stepper orientation="vertical" #stepper (selectionChange)="setIndex($event)" selectedIndex="{{autoSaveIndex.indexStepper}}">
+      <mat-step [stepControl]="Normas">
+        <form [formGroup]="Normas" >
+          <ng-template matStepLabel>Normas</ng-template>
+          <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Ensayo</mat-label>
+              <textarea matInput [placeholder]="'Ensayo'" [formControlName]="'ensayo'" autocomplete="off"
+              required></textarea>
+            </mat-form-field>
+
+          </div>
+          <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Convención de calificación</mat-label>
+              <textarea matInput [placeholder]="'Convención de calificación'" [formControlName]="'convencion_calificacion'" autocomplete="off"
+              required></textarea>
+            </mat-form-field>
+          </div>
+          <div class="flex justify-end mt-8 ng-star-inserted">
+            <button type="submit" mat-button matStepperNext
+            [disabled]="Normas.invalid"
+            (click)="NormasId ?  onEditNormas() : onSubmitNorma()"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="Procedimiento">
+        <form [formGroup]="Procedimiento" >
+          <ng-template matStepLabel>Procedimiento</ng-template><br>
+          <p class="my-6 font-medium">Procedimiento: </p>
+          <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Procedimiento</mat-label>
+              <input matInput [placeholder]="'Procedimiento'" [formControlName]="'procedimiento'" autocomplete="off"
+                required>
+
+            </mat-form-field>
+          </div>
+          <p class="my-6 font-medium">Método del ensayo: </p>
+          <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Método del ensayo</mat-label>
+              <input matInput [placeholder]="'método de ensayo'" [formControlName]="'metodo_ensayo'" autocomplete="off"
+                required>
+
+            </mat-form-field>
+          </div>
+          <p class="my-6 font-medium">Equipos y materiales empleados: </p>
+          <div class="content-inputs flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Equipos empleados</mat-label>
+              <input matInput [formControlName]="'equipos_empleados'" [placeholder]="'equipos empleado'"
+                autocomplete="off" required>
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Sustrato</mat-label>
+              <input matInput [formControlName]="'sustrato'" [placeholder]="'Sustrato'" autocomplete="off"
+                required>
+
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Método  de limpieza</mat-label>
+                <input matInput [formControlName]="'metodo_limpieza'" [placeholder]="'método de limpieza '" autocomplete="off"
+                  required>
+
+              </mat-form-field>
+          </div>
+          <div class="flex justify-end">
+            <button
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+              mat-flat-button type="button" matStepperPrevious>
+              Atras
+            </button>
+            <button type="button"
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save"
+              mat-flat-button type="button" matStepperNext (click)="ProcedimientoId ? onEditProcedimiento(): onSubmitProcedimiento()"  [disabled]="Procedimiento.invalid">
+              Siguiente
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="Sistema_pintura">
+        <form [formGroup]="Sistema_pintura" >
+          <ng-template matStepLabel>Sistema de pintura</ng-template><br>
+
+            <div class="flex">
+              <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Seleccione una opción</mat-label>
+                <mat-select [formControlName]="'operacion'">
+                  <mat-option [value]="'acond_Superficie'">Acond. Superficie</mat-option>
+                  <mat-option [value]="'Anticorrosivo'">Anticorrosivo</mat-option>
+                  <mat-option [value]="'Intermedia'">Intermedia</mat-option>
+                  <mat-option [value]="'Recubrimiento'">Recubrimiento</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="flex">
+              <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Calificación</mat-label>
+                <input matInput [formControlName]="'calificacion'" [placeholder]="'calificacion'" autocomplete="off" required>
+
+              </mat-form-field>
+            </div>
+
+            <div class="flex">
+              <mat-form-field class="flex-auto" appearance="outline">
+
+                <mat-label>Seleccione una opción</mat-label>
+                <mat-select [formControlName]="'aplicacion'">
+                  <mat-option [value]="'A'">Aplica</mat-option>
+                  <mat-option [value]="'N.A.'">No aplica</mat-option>
+                  <mat-option [value]="'F.A.'">Fuera de Alcance</mat-option>
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+
+            <div class="flex">
+              <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Espesor</mat-label>
+                <input matInput [formControlName]="'espesor'" [placeholder]="'espesor'" autocomplete="off" required>
+
+              </mat-form-field>
+            </div>
+
+            <div class="flex">
+              <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Tiempo de curado</mat-label>
+                <input matInput [formControlName]="'tiempo_curado'" [placeholder]="'Tiempo de curado'" autocomplete="off" required>
+
+              </mat-form-field>
+            </div>
+
+
+          <div class="flex justify-end">
+
+          <button
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+            mat-flat-button type="button" (click)="cancelarEditSistemaPintura()" *ngIf="SistemaPinturaStatus">
+            Cancela
+          </button>
+          <button type="submit"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base  btn btn-success"
+            mat-flat-button type="button"
+            (click)="SistemaPinturaStatus == false ? onSubmitSistemaPintura() : onEditarSistemaPintura()"
+            [disabled]="Sistema_pintura.status != 'VALID'">
+            {{SistemaPinturaStatus == false ? 'Añadir' : 'Editar'}}
+
+          </button>
+          </div>
+          <table class="table table-hover">
+            <tbody>
+              <tr *ngFor="let itemSistema of SistemaPintura" (click)="onClickEditSistemaPintura(itemSistema)">
+                <td>{{itemSistema.operacion}}</td>
+                <td>{{itemSistema.calificacion}}</td>
+                <td>{{itemSistema.aplicacion}}</td>
+                <td>{{itemSistema.espesor}}</td>
+                <td>{{itemSistema.tiempo_curado}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="flex justify-end">
+            <button
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+              mat-flat-button type="button" matStepperPrevious>
+              Atras
+            </button>
+            <button type="button"
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save"
+              mat-flat-button type="button" matStepperNext>
+              Siguiente
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="Condiciones_climatologicas">
+        <form [formGroup]="Condiciones_climatologicas" >
+          <ng-template matStepLabel>Condiciones climatologicas</ng-template><br>
+
+          <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Temperatura Ambiente(C°)</mat-label>
+              <input matInput [formControlName]="'temp_ambiental'" [placeholder]="'Temperatura de ambiente'"
+                autocomplete="off" required>
+            </mat-form-field>
+        </div>
+        <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Temperatura Substrato(C°)</mat-label>
+                <input matInput [formControlName]="'temp_substrato'" [placeholder]="'Temperatura de substrato'" autocomplete="off"
+                  required>
+            </mat-form-field>
+        </div>
+        <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Humedad relativa(%)</mat-label>
+              <input matInput [formControlName]="'humedad_relativa'" [placeholder]="'Humedad relativa'" autocomplete="off"
+                required>
+
+            </mat-form-field>
+        </div>
+
+        <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Punto de rocío(C°)</mat-label>
+              <input matInput [formControlName]="'punto_rocio'" [placeholder]="'Punto de rocío'" autocomplete="off"
+                required>
+
+            </mat-form-field>
+        </div>
+          <div class="flex justify-end mt-8 ng-star-inserted">
+            <button
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+              mat-flat-button type="button" matStepperPrevious>
+              Atras
+            </button>
+            <button type="button"
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save"
+              mat-flat-button type="button" matStepperNext (click)="CondicionesCId ? onEditarCondicionesClimatologicas(): onSubmitCondicionesClimatologicas()"  [disabled]="Condiciones_climatologicas.invalid">
+              Siguiente
+            </button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <form [formGroup]="ElementosInspeccionados">
+          <ng-template matStepLabel>
+            <div class="mat-step-custom-click"></div>
+            Elementos inspeccionados
+          </ng-template>
+          <quill-editor placeholder="Elementos Inspeccionados" [formControlName]="'elementos_inspeccionados'" [modules]="quillModules">
+          </quill-editor>
+
+          <div class="flex justify-end mt-3">
+            <button
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+              mat-flat-button type="button" matStepperPrevious>
+              Atras
+            </button>
+            <button type="button"
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save"
+              mat-flat-button type="button" matStepperNext (click)="ElementosInspeccionadosId ? onEditarElementosInspeccionados(): onSubmitElementosInspeccionados()"  >
+              Siguiente
+            </button>
+          </div>
+
+
+        </form>
+      </mat-step>
+
+      <mat-step>
+        <form [formGroup]="RegistroFotosCintas">
+          <ng-template matStepLabel>
+            <div class="mat-step-custom-click" ></div>
+            Cintas de adherencia y resultados
+          </ng-template>
+          <br>
+          <div class="content-inputs flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>N° de Cinta</mat-label>
+              <input matInput [formControlName]="'n_cinta'" name="n_cinta" [placeholder]="'N° de Cinta'"
+                autocomplete="off" required>
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Elemento</mat-label>
+              <input matInput [formControlName]="'elemento'" name="elemento" [placeholder]="'Elemento'" autocomplete="off"
+                required>
+
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Ubicacion</mat-label>
+                <input matInput [formControlName]="'ubicacion'" name="ubicacion" [placeholder]="'Ubicacion'" autocomplete="off"
+                  required>
+
+              </mat-form-field>
+          </div>
+
+          <div class="content-inputs flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Recubrimiento</mat-label>
+              <input matInput [formControlName]="'recubrimiento'" name="recubrimiento" [placeholder]="'Recubrimiento'"
+                autocomplete="off" required>
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto" appearance="outline">
+              <mat-label>Espesor</mat-label>
+              <input matInput [formControlName]="'espesor'" name="Espesor" [placeholder]="'Espesor'" autocomplete="off"
+                required>
+
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Resultado</mat-label>
+                <input matInput [formControlName]="'resultado'" name="resultado" [placeholder]="'Resultado'" autocomplete="off"
+                  required>
+
+              </mat-form-field>
+          </div>
+          <div class="flex">
+            <mat-form-field class="flex-auto" appearance="outline">
+                <mat-label>Tipo de falla</mat-label>
+                <input matInput [formControlName]="'tipo_falla'" name="tipo_falla" [placeholder]="'Tipo de falla'" autocomplete="off" required>
+                <mat-icon class="icon-size-5 icon-form" matPrefix>title</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="content-inputs">
+            <div class="mb-3">
+              <label for="formFileSm" class="form-label">Seleccione las imágenes</label>
+              <input class="form-control form-control-sm"
+
+              (change)="onPhotoSelectedRegistroFotos($event)"
+              id="formFileSmRegistroFotos" type="file" accept="image/png,image/jpeg,image/jpg"
+              #formFileSmRegistroFotos>
+            </div>
+          </div>
+          <div class="flex justify-end mb-3">
+            <button type="submit"
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base  btn btn-success bt-m"
+              mat-flat-button type="submit" (click)="onSubmitRegistroFotos()" >
+              Añadir
+            </button>
+          </div>
+          <div class="marging row-img">
+            <div class="column-img">
+              <mat-grid-list cols="2" rowHeight="2:1">
+                <mat-grid-tile *ngFor="let item of RegistroFotos; index as i;">
+
+                  <img mat-card-image [src]="url+'/img-uploads/' + item.image" alt="{{item.title}}"
+                   (click)="showLightboxRegistroFotos(i)" class="img">
+
+
+                 <mat-grid-tile-footer>
+                   <h3 mat-line>Registro Fotográfico N° {{i+1}}</h3>
+                   <span mat-line> {{item.title}} </span>
+                   <button mat-mini-fab color="warn" (click)="deleteRegistroFoto(item._id)">
+                     <mat-icon>restore_from_trash</mat-icon>
+                   </button>
+                 </mat-grid-tile-footer>
+
+                </mat-grid-tile>
+              </mat-grid-list>
+            </div>
+          </div>
+          <ng-image-fullscreen-view [images]="imageObjectRegistroFotosCintas" [imageIndex]="selectedImageIndexRegistroFotos"
+          [show]="showFlagRegistroFotos" (close)="closeEventHandlerRegistroFotos()"></ng-image-fullscreen-view>
+          <div class="flex justify-end mt-3">
+            <button
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+              mat-flat-button type="button" matStepperPrevious>
+              Atras
+            </button>
+            <button type="button"
+              class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save"
+              mat-flat-button type="button" matStepperNext>
+              Siguiente
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+    </mat-stepper>
+
+  </form>

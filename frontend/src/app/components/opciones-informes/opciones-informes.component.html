@@ -1,0 +1,87 @@
+ <div class="projects-section-header">
+
+    <h2 class="title_opt">Opciones de configuración: </h2>
+
+    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Addconfiguracion">Añadir configuración <i class="fas fa-plus"></i></button>
+
+    <div class="modal fade" id="Addconfiguracion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"><strong>Agregar parámetro de configuración</strong></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="Parametros" >
+                <div class="flex">
+                  <mat-form-field class="flex-auto" appearance="outline" style="width: 100%;">
+                    <mat-label>Nombre de parámetro</mat-label>
+                    <input matInput [placeholder]="'nombre de parámetro'" [formControlName]="'name'" autocomplete="off"
+                      required/>
+                  </mat-form-field>
+                </div>
+                <div class="flex">
+                    <mat-form-field class="flex-auto" appearance="outline" style="width: 100%;">
+                      <mat-label>Opciones de configuración</mat-label>
+                      <input matInput [placeholder]="'nombre de parámetro'" [formControlName]="'data'" autocomplete="off"
+                        required/>
+                    </mat-form-field>
+                </div>
+                <div class="flex justify-end">
+                    <button
+                      class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+                      mat-flat-button type="button" (click)="cancelarEditParametros()" *ngIf="ParametrosStatus">
+                      Cancela
+                    </button>
+                    <button type="button"
+                      class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base  btn btn-success"
+                      mat-flat-button type="button" (click)="onSubmitOpcionesInformes()"
+                      [disabled]="Parametros.status != 'VALID'">
+                      {{ParametrosStatus == false ? 'Añadir' : 'Editar'}}
+
+                    </button>
+                </div>
+                <table class="table table-hover">
+                    <tbody>
+                      <tr *ngFor="let itemPar of dataOpciones" (click)="onClickEditParametros(itemPar)">
+                        <td>{{itemPar}}</td>
+                        <td>
+                          <button class="btn btn-danger"><i class="fa-solid fa-xmark"></i></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 20px; ">Cancelar</button>
+              <button class="btn btn-primary" type="submit" [disabled]="Parametros.invalid"
+              (click)="onSubmitOpciones()">Guardar <i class="fas fa-save"></i></button>
+
+               </form>
+
+            </div>
+          </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-4" *ngFor="let parametro of OpcionesInfomes">
+        <div class="card cardtabla">
+            <h6 class="tit_opcion"> ■	{{parametro['name']}} </h6>
+            <table datatable [dtOptions]="dtOptions"  [dtTrigger]="dtTrigger" class="table table-hover" >
+                 <thead>
+                     <tr>
+                         <th><strong>Nombre de opción</strong></th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                  <tr *ngFor="let op of OpcionesInfomes">
+                    <td>{{parametro.data}}</td>
+                  </tr>
+                 </tbody>
+             </table>
+        </div>
+    </div>
+</div>
+
+

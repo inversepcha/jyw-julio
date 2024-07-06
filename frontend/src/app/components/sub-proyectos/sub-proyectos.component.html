@@ -1,0 +1,180 @@
+<div class="projects-section-header">
+
+    <h2>SubProyectos</h2>
+</div>
+
+<div class="card" id="Table">
+    <div class="card-header">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            style="border-radius: 20px !important; font-family: Arial, Helvetica, sans-serif;">
+            <i class="fas fa-plus-circle"></i> &nbsp; <strong>Agregar SubProyecto</strong>
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Nombre</strong></th>
+                        <th><strong>Descripción</strong></th>
+                        <th><strong>Estado</strong></th>
+                        <th><strong>Acciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let subproyecto of subproyectos">
+
+                        <td>{{subproyecto.nombre}}</td>
+                        <td>{{subproyecto.descripcion}}</td>
+                        <td>
+                            <button *ngIf="subproyecto.estado == 0" (click)="updateEstadoSubProyecto(1, subproyecto.id)"
+                                class="btn status active btn-sm"><strong>Activo</strong></button>
+                            <button *ngIf="subproyecto.estado == 1" (click)="updateEstadoSubProyecto(0, subproyecto.id)"
+                                class="btn status disabled-btn btn-sm"><strong>Desactivado</strong></button>
+
+                        </td>
+
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-icon" type="button" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h" data-toggle="tooltip" data-placement="top" title=""
+                                        data-original-title="Actions"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" data-bs-toggle="modal"
+                                            (click)='getSubproyecto(subproyecto.id)' data-bs-target="#exampleModal2"
+                                            href='#'><i style="color: rgb(26, 25, 25);" class="fas fa-pencil-alt"></i>
+                                            &nbsp; <strong>Editar</strong></a></li>
+                                    <li><a class="dropdown-item text-danger" (click)='deleteSubProyecto(subproyecto.id)'
+                                            style="cursor: pointer;"><i class="fas fa-trash"
+                                                style="color: rgb(148, 21, 21);"></i> &nbsp; <strong>Eliminar</strong>
+                                        </a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br><br>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+        <form #FormAddSubProyecto="ngForm" (ngSubmit)='addSubProyecto()'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar SubProyecto</h5>
+                    <button type="button" class="btn-close btn-close-add" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombreSub" class="form-label"
+                            [ngClass]='{"errorLabel": nombreSubProyecto.invalid && (nombreSubProyecto.dirty || nombreSubProyecto.touched)}'>Nombre
+                            del SubProyecto</label>
+                        <input type="text" class="form-control" name='nombre' id="nombreSub"
+                            [(ngModel)]="nuevoSubProyecto.nombre" placeholder="Ingrese el nombre del sub proyecto"
+                            autocomplete="off" #nombreSubProyecto="ngModel"
+                            [ngClass]='{"errorForm":(nombreSubProyecto.touched || nombreSubProyecto.dirty)&&nombreSubProyecto.invalid }'
+                            required>
+                        <div
+                            *ngIf="nombreSubProyecto.invalid && (nombreSubProyecto.dirty || nombreSubProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="nombreSubProyecto.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="message">
+                            {{ message }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nombreSub" class="form-label"
+                            [ngClass]='{"errorLabel": descripcionSubProyecto.invalid && (descripcionSubProyecto.dirty || descripcionSubProyecto.touched)}'>Descripción</label>
+                        <textarea class="form-control" name="descripcion" id="descripcion"
+                            [(ngModel)]="nuevoSubProyecto.descripcion" rows="5" #descripcionSubProyecto="ngModel"
+                            cols="80" placeholder="Describa el sub proyecto"
+                            [ngClass]='{"errorForm":(descripcionSubProyecto.touched || descripcionSubProyecto.dirty)&&descripcionSubProyecto.invalid }'
+                            required></textarea>
+                        <div
+                            *ngIf="descripcionSubProyecto.invalid && (descripcionSubProyecto.dirty || descripcionSubProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="descripcionSubProyecto.errors?.required">
+                                Proporcione una descripción válida.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="!FormAddSubProyecto.form.valid">Guardar
+                        SubProyecto</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form #modificarSubProyecto="ngForm" (ngSubmit)='editSubProyecto()'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modificar Subproyecto</h5>
+                    <button type="button" class="btn-close btn-close-edit" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="nombreSub" class="form-label"
+                            [ngClass]='{"errorLabel": editarNombreSubProyecto.invalid && (editarNombreSubProyecto.dirty || editarNombreSubProyecto.touched)}'>Modificar
+                            nombre del SubProyecto</label>
+                        <input type="text" class="form-control" name='nombreSub' id="nombreSub"
+                            [(ngModel)]="editarSubProyecto.nombre" placeholder="Ingrese el nombre del sub proyecto"
+                            autocomplete="off" #editarNombreSubProyecto="ngModel"
+                            [ngClass]='{"errorForm": editarNombreSubProyecto.invalid && (editarNombreSubProyecto.dirty || editarNombreSubProyecto.touched)}'
+                            required>
+                        <div
+                            *ngIf="editarNombreSubProyecto.invalid && (editarNombreSubProyecto.dirty || editarNombreSubProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="editarNombreSubProyecto.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nombreSub" class="form-label"
+                            [ngClass]='{"errorLabel": ModificaDescripcionSubproyecto.invalid && (ModificaDescripcionSubproyecto.dirty || ModificaDescripcionSubproyecto.touched)}'>Modificar
+                            descripción</label>
+
+                        <textarea class="form-control" name="descripcion" id="descripcion"
+                            [(ngModel)]="editarSubProyecto.descripcion" #ModificaDescripcionSubproyecto="ngModel"
+                            [ngClass]='{"errorForm": ModificaDescripcionSubproyecto.invalid && (ModificaDescripcionSubproyecto.dirty || ModificaDescripcionSubproyecto.touched)}'
+                            rows="5" cols="80" placeholder="Describa el subproyecto" required></textarea>
+                        <div
+                            *ngIf="ModificaDescripcionSubproyecto.invalid && (ModificaDescripcionSubproyecto.dirty || ModificaDescripcionSubproyecto.touched) ">
+                            <div class="errorValidate" *ngIf="ModificaDescripcionSubproyecto.errors?.required">
+                                Proporcione una descripcion válida.
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="!modificarSubProyecto.form.valid">Modificar SubProyecto</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

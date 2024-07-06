@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f3f6fd !important;
+}
+
+.projects-section{
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.card{
+    font-family: 'Poppins', sans-serif !important;
+}
+
+.btn{
+    font-family: 'Poppins', sans-serif !important;
+}
+
+table th,td, tr{
+    font-family: 'Poppins', sans-serif !important;
+}
+::-webkit-scrollbar {
+    width: 11px !important;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+    -webkit-border-radius: 10px;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 2px;
+    background: #aaaaaa !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(134, 138, 146, 0.5) !important;
+}
+
+.errorForm {
+    border-color: red !important;
+}
+
+.errorLabel,
+.errorValidate {
+    color: #dc3545;
+}
+
+body.dark {
+    background: rgb(17, 24, 39) !important;
+    color: white;
+}
+
+body.dark nav ul li {
+    color: white !important;
+}
+
+body.dark nav ul .nav-item .logo h1 {
+    color: white !important;
+}
+
+body.dark #sol {
+    color: white !important;
+}
+
+body.dark nav ul li #cerrarsesi {
+    background-color: white !important;
+    color: black !important;
+}
+
+body.dark #nueva {
+    background-color: #fff !important;
+    border-radius: 20px;
+    float: left;
+    width: 25%;
+    max-width: 100%;
+    color: black !important;
+}
+
+@media (max-width: 420px) {
+    body.dark #nueva {
+        background-color: #fff !important;
+        border-radius: 20px;
+        float: left;
+        width: 100%;
+        color: black !important;
+    }
+}
+
+body #nueva {
+    background-color: rgb(13, 9, 20) !important;
+    border-radius: 20px;
+    float: left;
+    width: 25%;
+    max-width: 100%;
+    color: rgb(255, 255, 255) !important;
+}
+
+@media (max-width: 420px) {
+    body #nueva {
+        background-color: rgb(13, 9, 20) !important;
+        border-radius: 20px;
+        float: left;
+        width: 100%;
+        color: rgb(255, 255, 255) !important;
+    }
+}
+
+body.dark #sep1 {
+    background: #161d27 !important;
+    color: #C8C8C8;
+}
+
+body.dark .projects-section {
+    background-color: #1f2937 !important;
+}
+
+body.dark .projects-section h2 {
+    color: white;
+}
+
+body.dar nav ul li .logo h1 {
+    color: white;
+}
+
+body.dark .modal {
+    color: black;
+}
+
+body.dark nav li .logo h1 {
+    color: white !important;
+}
+
+body.dark nav li .btn-menu label {
+    color: white !important;
+}
+
+body.dark #Table {
+    background-color: transparent;
+}
+
+body.dark #Table {
+    box-shadow: 1px 1px 16px rgb(37, 37, 37);
+    border: 0;
+    z-index: 100 !important;
+}
+
+body.dark #Table thead {
+    background-color: rgba(16, 24, 37, 0.6) !important;
+    color: white;
+    border-radius: 20px !important;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 1px 1px 16px rgb(37, 37, 37) !important;
+}
+
+body.dark #Table tbody tr td {
+    background-color: rgba(16, 24, 37, 0.6) !important;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body.dark #Table tbody tr td i {
+    color: white;
+}
+
+body.dark tr {
+    box-shadow: 1px 1px 16px rgb(21, 29, 48) !important;
+    border-radius: 20px;
+}
+
+body.dark .dropdown .dropdown-menu .dropdown-item ul li a .fas {
+    color: black !important;
+}
+
+body.dark .navb {
+    background-color: #23232E;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .navb i{
+    color: white !important;
+}
+
+body.dark .navb .dop_cerr{
+    color: white;
+}
+
+body.dark #dropdownMenuButton1{
+    color: white;
+}
+
+body.dark #dropdownMenuButton1{
+    border: 1px solid #23232E;
+}
+
+body.dark #campana{
+    color: white !important;
+}
+.cdk-global-overlay-wrapper {
+  z-index: 1000 !important;
+}
+
+.cdk-overlay-container {
+  z-index: 9999 !important;
+}

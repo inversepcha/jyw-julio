@@ -1,0 +1,154 @@
+<div *ngIf="authService.loggedIn()">
+
+  <div class="navigation">
+    <div class="navb">
+      <div class="toggle" (click)="onClickMenu()">
+        <i class="open fas fa-bars"></i>
+        <i class="close fas fa-bars"></i>
+      </div>
+      <div class="notif">
+        <span class="dop_cerr" id="campana"><i class="noti fas fa-bell"></i></span>
+        <button class="switch" id="switch" switch="0">
+          <span id="sol">
+            <i class="far fa-moon" style="font-size: 23px"></i>
+          </span>
+        </button>
+        <div class="dropdown" id="cerr">
+          <button class="btn btn-light dropdown-toggle profile-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ url + '/image-user/' + identity.image }}" width="30px" height="30px" class="img-usr" alt=""/>
+            &nbsp; &nbsp; <strong class="dop_cerr">{{ identity.nombre_usuario.split(" ", 1) }}</strong>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="muestra">
+            <li>
+              <a class="dropdown-item" (click)="logout()"
+                ><strong
+                  ><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</strong
+                >
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="head">
+      <div class="perf">
+        <img src="{{url + '/image-user/' + identity.image}}" width="40px" alt="" />
+      </div>
+      <div class="nomb">
+        <small>Hola 🤚</small>
+        <span class="Use">{{ identity.nombre_usuario }}</span>
+      </div>
+    </div>
+    <hr style="width: 90%; text-align: center" />
+    <br />
+    <ul>
+      <li class="list">
+        <a [routerLink]="'/ordenes'" [routerLinkActive]="['active']">
+          <span class="icon"><i class="fas fa-file-signature"></i></span>
+          <span class="title">Órdenes de trabajo</span>
+        </a>
+      </li>
+      <li class="list">
+        <a [routerLink]="'/proyectos'" [routerLinkActive]="['active']">
+          <span class="icon"><i class="fas fa-project-diagram"></i></span>
+          <span class="title">Proyectos</span>
+        </a>
+      </li>
+      <li class="list">
+        <a [routerLink]="'/implementos'" [routerLinkActive]="['active']">
+          <span class="icon"
+            ><i class="fas fa-tools" title="Implementos"></i
+          ></span>
+          <span class="title">Implementos</span>
+        </a>
+      </li>
+      <li class="list">
+        <a [routerLink]="'/tipo-implementos'" [routerLinkActive]="['active']">
+          <span class="icon"
+            ><i class="fas fa-toolbox" title="Tipo Implementos"></i></span>
+          <span class="title">Tipo Implementos</span>
+        </a>
+      </li>
+      <li class="list">
+        <a [routerLink]="'/clientes'" [routerLinkActive]="['active']">
+          <span class="icon"><i class="fas fa-user-tie" title="Clientes"></i></span>
+          <span class="title">Clientes</span>
+        </a>
+      </li>
+      <li class="list">
+        <a [routerLink]="'/usuarios'" [routerLinkActive]="['active']">
+          <span class="icon"><i class="fas fa-users" title="Usuarios"></i></span>
+          <span class="title">Usuarios</span>
+        </a>
+      </li>
+      <li class="list">
+        <a [routerLink]="'/informes-rutas'" [routerLinkActive]="['active']">
+          <span class="icon"><i class="fas fa-route"></i></span>
+          <span class="title">Rutas Informes</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="app-content">
+      <div class="projects-section mt-5">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="login" *ngIf="!authService.loggedIn()">
+  <div class="login__content">
+    <div class="login__img">
+      <img src="assets/img/img-login.svg" alt="" />
+    </div>
+
+    <div class="login__forms">
+      <form (submit)="onSubmit()" class="login__registre" id="login-in">
+        <h1 class="login__title">JYW-APP</h1>
+
+        <div class="col-xs-12 text-center" *ngIf="errorMessage">
+          <p class="alert alert-danger" role="status" aria-live="polite">
+            <span ng-if="response.error" class="ng-binding ng-scope">
+              {{ errorMessage }}
+            </span>
+          </p>
+        </div>
+
+        <div class="login__box">
+          <i class="fas fa-user login__icon"></i>
+          <input
+            type="text"
+            [(ngModel)]="user.usuario"
+            name="usuario"
+            placeholder="Usuario"
+            class="login__input"
+            autocomplete="off"
+            required
+            autofocus
+          />
+        </div>
+
+        <div class="login__box">
+          <i class="fas fa-lock login__icon"></i>
+          <input
+            type="password"
+            [(ngModel)]="user.password"
+            name="password"
+            placeholder="Contraseña"
+            class="login__input"
+            required
+          />
+        </div>
+        <button type="submit" class="login__button">
+          <i class="fas fa-sign-out-alt"></i> &nbsp; INGRESAR
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+

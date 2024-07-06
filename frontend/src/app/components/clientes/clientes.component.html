@@ -1,0 +1,296 @@
+<div class="projects-section-header">
+  <h2>Clientes</h2>
+</div>
+
+<div class="card" id="Table">
+  <div class="card-header">
+    <button id="AddClien" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <i class="fas fa-plus-circle"></i> &nbsp; <strong>Agregar Cliente</strong>
+    </button>
+    <!-- <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <strong> Agregar Cliente</strong>
+        </button> -->
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+
+            <p class="info">Mostrar</p>
+
+            <select class="form-select" id="valores" ngModel="5" (ngModelChange)="getClienteCantidad($event)">
+              <option value="5" selected>5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+
+            <p class="info">registros por página</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <input type="text" class="form-control" placeholder="Buscar" ngModel
+              (ngModelChange)="getSearchCliente($event)" style="width: 40%;">
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th><strong>Nombre</strong></th>
+            <th><strong>Nit</strong></th>
+            <th><strong>Dirección</strong></th>
+            <th><strong>Teléfono</strong></th>
+            <th><strong>Ciudad</strong></th>
+            <th><strong>Acciones</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of clientes">
+            <td>{{ cliente.nombre }}</td>
+            <td>{{ cliente.nit }}</td>
+            <td>{{ cliente.direccion }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>{{ cliente.ciudad }}</td>
+            <!-- <td>
+                            <a class="btn status active btn-sm" href='https://www.google.com/maps/search/{{cliente.ubicacion}}' target="_blank">Ver Ubicación</a>
+
+                        </td> -->
+            <td>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-icon" type="button" role="button" id="dropdownMenuLink"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-ellipsis-h" data-toggle="tooltip" data-placement="top" title=""
+                    data-original-title="Actions"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <li>
+                    <a class="dropdown-item" (click)="getCliente(cliente.id)" data-bs-toggle="modal"
+                      data-bs-target="#exampleModal2" href="#"><i style="color: rgb(26, 25, 25)"
+                        class="fas fa-pencil-alt"></i>
+                      &nbsp; <strong>Editar</strong></a>
+                  </li>
+
+                  <li class="delete">
+                    <a class="dropdown-item text-danger" (click)="deleteCliente(cliente.id)" style="cursor: pointer"><i
+                        style="color: rgb(148, 21, 21)" class="fas fa-trash"></i>
+                      &nbsp; <strong>Eliminar</strong></a>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end" *ngIf="paginacion">
+      <div class="btn-group me-2" role="group" aria-label="First group">
+        <button type="button" class="btn btn-outline-primary"
+          (click)="getClientePaginacion(paginacion.anterior || 0)">Anterior</button>
+        <button type="button" class="btn btn-outline-secondary" *ngIf="paginacion.actual == 0 "
+          (click)="getClientePaginacion(paginacion.anterior || 0)">{{paginacion.actual + 1}}</button>
+        <button type="button" class="btn btn-outline-secondary" *ngIf="paginacion.actual != 0 "
+          (click)="getClientePaginacion(paginacion.anterior || 0)">{{paginacion.actual + 1}}</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="getClientePaginacion(paginacion.siguiente)"
+          *ngIf="paginacion.siguiente">{{paginacion.siguiente + 1}}</button>
+        <button type="button" class="btn btn-outline-primary" (click)="getClientePaginacion(paginacion.siguiente)"
+          [disabled]="!paginacion.siguiente">Siguiente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form #FormaddCliente="ngForm" (ngSubmit)="addCliente()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar cliente</h5>
+          <button type="button" class="btn-close btn-close-add" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label"
+              [ngClass]='{"errorLabel": NombreCliente.invalid && (NombreCliente.dirty || NombreCliente.touched)}'>Nombre</label>
+            <input type="text" class="form-control" name="usuario" [(ngModel)]="nuevoCliente.nombre"
+              oninput="this.value=this.value.toUpperCase()" placeholder="Ingrese el Nombre" autocomplete="off"
+              #NombreCliente="ngModel"
+              [ngClass]='{"errorForm": NombreCliente.invalid && (NombreCliente.dirty || NombreCliente.touched)}'
+              required />
+            <div id="perf" *ngIf="NombreCliente.invalid && (NombreCliente.dirty || NombreCliente.touched) ">
+              <div class="errorValidate" *ngIf="NombreCliente.errors?.required">
+                Proporcione un nombre válido.
+              </div>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="message">
+              {{ message }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label"
+              [ngClass]='{"errorLabel": addNitCliente.invalid && (addNitCliente.dirty || addNitCliente.touched)}'>NIT</label>
+            <input type="text" class="form-control" name="nit" [(ngModel)]="nuevoCliente.nit"
+              oninput="this.value=this.value.toUpperCase()" placeholder="Ingrese el Nit" autocomplete="off"
+              #addNitCliente="ngModel"
+              [ngClass]='{"errorForm": addNitCliente.invalid && (addNitCliente.dirty || addNitCliente.touched)}'
+              required />
+            <div id="perf" *ngIf="addNitCliente.invalid && (addNitCliente.dirty || addNitCliente.touched) ">
+              <div class="errorValidate" *ngIf="addNitCliente.errors?.required">
+                Proporcione un NIT válido.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="" class="form-label"
+              [ngClass]='{"errorLabel": DireccionCliente.invalid && (DireccionCliente.dirty || DireccionCliente.touched)}'>Dirección</label>
+            <input type="text" class="form-control" name="direccion" [(ngModel)]="nuevoCliente.direccion"
+              oninput="this.value=this.value.toUpperCase()" placeholder="Ingrese la dirección" autocomplete="off"
+              #DireccionCliente="ngModel"
+              [ngClass]='{"errorForm": DireccionCliente.invalid && (DireccionCliente.dirty || DireccionCliente.touched)}'
+              required />
+            <div id="perf" *ngIf="DireccionCliente.invalid && (DireccionCliente.dirty || DireccionCliente.touched) ">
+              <div class="errorValidate" *ngIf="DireccionCliente.errors?.required">
+                Proporcione una Dirección válida.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for=""
+              [ngClass]='{"errorLabel": TelefonoCliente.invalid && (TelefonoCliente.dirty || TelefonoCliente.touched)}'>Teléfono</label>
+            <input type="text" class="form-control" name="telefono" [(ngModel)]="nuevoCliente.telefono"
+              autocomplete="off" placeholder="Ingrese el teléfono" #TelefonoCliente="ngModel"
+              [ngClass]='{"errorForm": TelefonoCliente.invalid && (TelefonoCliente.dirty || TelefonoCliente.touched)}'
+              required />
+            <div id="perf" *ngIf="TelefonoCliente.invalid && (TelefonoCliente.dirty || TelefonoCliente.touched) ">
+              <div class="errorValidate" *ngIf="TelefonoCliente.errors?.required">
+                Proporcione una Teléfono válida.
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="Ubicación">Ciudad</label>
+            <ng-select2 [data]="ciudades" [(ngModel)]="nuevoCliente.ciudad" name="ciudad"
+              [placeholder]="'Seleccione una ciudad'" [options]="optionsAdd">
+            </ng-select2>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success" [disabled]="!FormaddCliente.form.valid">Guardar Cliente</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form #FormupdateCliente="ngForm" (ngSubmit)="updateCliente()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modificar cliente</h5>
+          <button type="button" class="btn-close btn-close-edit" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label"
+              [ngClass]='{"errorLabel": ModificarNombreCliente.invalid && (ModificarNombreCliente.dirty || ModificarNombreCliente.touched)}'>Modificar
+              Nombre</label>
+            <input type="text" class="form-control" name="usuario" [(ngModel)]="editCliente.nombre"
+              oninput="this.value=this.value.toUpperCase()" placeholder="Ingrese el Nombre" autocomplete="off"
+              #ModificarNombreCliente="ngModel"
+              [ngClass]='{"errorForm": ModificarNombreCliente.invalid && (ModificarNombreCliente.dirty || ModificarNombreCliente.touched)}'
+              required />
+            <div id="perf"
+              *ngIf="ModificarNombreCliente.invalid && (ModificarNombreCliente.dirty || ModificarNombreCliente.touched) ">
+              <div class="errorValidate" *ngIf="ModificarNombreCliente.errors?.required">
+                Proporcione un nombre válido.
+              </div>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="messageEdit">
+              {{ messageEdit }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label"
+              [ngClass]='{"errorLabel": ModificarNITCliente.invalid && (ModificarNITCliente.dirty || ModificarNITCliente.touched)}'>Modificar
+              NIT</label>
+            <input type="text" class="form-control" name="nit" [(ngModel)]="editCliente.nit"
+              oninput="this.value=this.value.toUpperCase()" placeholder="Ingrese el Nit" autocomplete="off"
+              #ModificarNITCliente="ngModel"
+              [ngClass]='{"errorForm": ModificarNITCliente.invalid && (ModificarNITCliente.dirty || ModificarNITCliente.touched)}'
+              required />
+            <div id="perf"
+              *ngIf="ModificarNITCliente.invalid && (ModificarNITCliente.dirty || ModificarNITCliente.touched) ">
+              <div class="errorValidate" *ngIf="ModificarNITCliente.errors?.required">
+                Proporcione un NIT válido.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label"
+              [ngClass]='{"errorLabel": ModificarDireccionCliente.invalid && (ModificarDireccionCliente.dirty || ModificarDireccionCliente.touched)}'>Modificar
+              Dirección</label>
+            <input type="text" class="form-control" name="direccion" [(ngModel)]="editCliente.direccion"
+              oninput="this.value=this.value.toUpperCase()" placeholder="Ingrese la dirección" autocomplete="off"
+              #ModificarDireccionCliente="ngModel"
+              [ngClass]='{"errorForm": ModificarDireccionCliente.invalid && (ModificarDireccionCliente.dirty || ModificarDireccionCliente.touched)}'
+              required />
+            <div id="perf"
+              *ngIf="ModificarDireccionCliente.invalid && (ModificarDireccionCliente.dirty || ModificarDireccionCliente.touched) ">
+              <div class="errorValidate" *ngIf="ModificarDireccionCliente.errors?.required">
+                Proporcione una dirección válida.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for=""
+              [ngClass]='{"errorLabel": ModificarTelefonoCliente.invalid && (ModificarTelefonoCliente.dirty || ModificarTelefonoCliente.touched)}'>Modificar
+              Teléfono</label>
+            <input type="text" class="form-control" name="telefono" [(ngModel)]="editCliente.telefono"
+              autocomplete="off" placeholder="Ingrese el teléfono" #ModificarTelefonoCliente="ngModel"
+              [ngClass]='{"errorForm": ModificarTelefonoCliente.invalid && (ModificarTelefonoCliente.dirty || ModificarTelefonoCliente.touched)}'
+              required />
+            <div id="perf"
+              *ngIf="ModificarTelefonoCliente.invalid && (ModificarTelefonoCliente.dirty || ModificarTelefonoCliente.touched) ">
+              <div class="errorValidate" *ngIf="ModificarTelefonoCliente.errors?.required">
+                Proporcione un Teléfono válido.
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="Ubicación">Modificar Ciudad</label>
+            <ng-select2 [data]="ciudades" [(ngModel)]="editCliente.ciudad" name="ciudad"
+              [placeholder]="'Seleccione una ciudad para modificar'" [options]="optionsEdit">
+            </ng-select2>
+            <!-- <input type="text" class="form-control" name="ubicacion" id="Ubicación" [(ngModel)]="editCliente.ciudad" placeholder="Ingrese la Ubicación" autocomplete="off"> -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success" [disabled]="!FormupdateCliente.form.valid">
+            Modificar Cliente
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

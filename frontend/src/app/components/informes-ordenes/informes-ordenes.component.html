@@ -1,0 +1,173 @@
+<div class="flex items-start justify-between" *ngIf="detallesOrden">
+  <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+    <div class="text-4xl tracking-tight text-secondary">Proyecto</div>
+    <div class="text-4xl">{{detallesOrden.proyecto}}</div>
+    <div class="font-medium tracking-tight text-secondary">Sub-proyecto</div>
+    <div class="font-medium">{{detallesOrden.subProyecto}}</div>
+    <div class="font-medium tracking-tight text-secondary">Consecutivo</div>
+    <div class="font-medium">{{detallesOrden.orden_consecutivo}}</div>
+    <div class="font-medium tracking-tight text-secondary">Fecha de inicio</div>
+    <div class="font-medium">{{detallesOrden.fecha_visita | date : 'mediumDate'}}</div>
+    <div class="font-medium tracking-tight text-secondary">Lugar de inspección</div>
+    <div class="font-medium">{{detallesOrden.lugar_visita}}</div>
+  </div>
+</div>
+
+<div class="projects-section-header">
+  <div class="flex sm items-start sm:items-center sm:justify-between py-8 px-6 px-8">
+    <div>
+      <div class="text-4xl font-extrabold tracking-tight leading-none">Informes</div>
+      <div class="ml-0.5 font-medium text-secondary">
+
+
+        <!----><span class="ng-star-inserted" *ngIf="informesOrden.length == 1">{{informesOrden.length}} Informe</span>
+        <!----><span class="ng-star-inserted" *ngIf="informesOrden.length > 1">{{informesOrden.length}} Informes</span>
+      </div>
+    </div>
+    <div class="mt-4 sm:mt-0">
+      <!----><button mat-flat-button (click)="onGetInformes();"
+        class="mat-focus-indicator mat-tooltip-trigger ml-3 mat-flat-button mat-button-base btn btn-primary"
+        type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop"
+        aria-controls="offcanvasWithBackdrop"><span class="mat-button-wrapper">
+          <mat-icon role="img" class="mat-icon notranslate mat-icon-no-color" aria-hidden="true"
+            data-mat-icon-type="svg" data-mat-icon-name="plus" data-mat-icon-namespace="heroicons_outline"><svg
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" fit=""
+              height="100%" width="100%" preserveAspectRatio="xMidYMid meet" focusable="false">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+              </path>
+            </svg></mat-icon><span class="ml-2 mr-1">Agregar Informe</span>
+        </span><span matripple="" class="mat-ripple mat-button-ripple"></span><span
+          class="mat-button-focus-overlay"></span></button>
+      <!---->
+    </div>
+  </div>
+</div>
+
+
+<div *ngFor="let informeItem of informesOrden" cdkdrag
+  class="cdk-drag group w-full select-none bg-gray-100  h-16 ng-star-inserted divide-y">
+  <!---->
+  <div class="relative flex items-center h-full pl-10">
+    <div class="z-10 absolute -top-px right-0 -bottom-px flex flex-0 w-1 bg-primary indication"></div>
+    <!---->
+    <!---->
+    <div cdkdraghandle
+      class="cdk-drag-handle md:hidden absolute flex items-center justify-center inset-y-0 left-0 w-8 cursor-move md:group-hover:flex"
+      style="touch-action: none; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; user-select: none;">
+
+    </div><button mat-icon-button
+      class="mat-focus-indicator mr-2 -ml-2.5 leading-none mat-icon-button mat-button-base ng-star-inserted"><span
+        class="mat-button-wrapper">
+        <!---->
+        <mat-icon role="img" class="mat-icon notranslate text-hint mat-icon-no-color ng-star-inserted"
+          aria-hidden="true" data-mat-icon-type="svg" data-mat-icon-name="check-circle"
+          data-mat-icon-namespace="heroicons_outline"><svg xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" fit="" height="100%" width="100%"
+            preserveAspectRatio="xMidYMid meet" focusable="false">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg></mat-icon>
+        <!---->
+        <!---->
+      </span><span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"></span><span
+        class="mat-button-focus-overlay"></span></button>
+    <!----><a class="link-informe flex flex-auto items-center min-w-0 h-full pr-7"
+      [routerLink]="[informeItem.informe_ruta, informeItem.orden_id, informeItem.id]">
+      <div class="flex-auto mr-2 truncate"><span class="ng-star-inserted">
+
+          {{informeItem.informe}}
+
+        </span>
+        <!---->
+        <!---->
+        <!---->
+      </div>
+      <div class=" h-4 mr-3  ">
+        <p class="text-sm whitespace-nowrap text-secondary ng-star-inserted">
+          {{informeItem.rep_numero}}
+        </p>
+
+
+      </div>
+
+    </a>
+
+    <div class="text-sm whitespace-nowrap text-secondary ng-star-inserted">
+      <div class="dropdown ">
+        <button class="btn btn-light" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <li><button class="dropdown-item" type="button" (click)=" exportDocumentPdf(informeItem.id, informeItem.informe)"
+              data-bs-toggle="modal" data-bs-target="#modalDownload"><i class="fas fa-file-pdf"></i> PDF</button></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="offcanvas  offcanvas-end" tabindex="-1" id="offcanvasWithBackdrop"
+  aria-labelledby="offcanvasWithBackdropLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Agregar informe</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form #FormInforme="ngForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="Informe" class="form-label"
+          [ngClass]='{"errorLabel": informeModel.invalid && (informeModel.dirty || informeModel.touched)}'>Informe</label>
+        <select class="form-control" name="Informe" id="Informe" [(ngModel)]="informe.informe_ruta"
+          #informeModel="ngModel" (ngModelChange)="onGetDocument(); onGetReferencia();"
+          [ngClass]='{"errorForm": informeModel.invalid && (informeModel.dirty || informeModel.touched)}' required>
+          <option value="" selected disabled>-- Seleccione Informe--</option>
+          <option *ngFor="let informe of informesSelect" value="{{informe.router}}">
+            {{informe.nombre}}</option>
+        </select>
+        <div *ngIf="informeModel.invalid && (informeModel.dirty || informeModel.touched) ">
+          <div class="errorValidate" *ngIf="informeModel.errors?.required">
+            Seleccione un opcion válida.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="Informe" class="form-label">Consecutivo</label>
+
+
+        <input type="text" class="form-control" id="consecutivo" [(ngModel)]="informe.consecutivo" name="consecutivo"
+          (ngModelChange)="onChangeConsecutivo();" placeholder="Consecutivo" autocomplete="off">
+      </div>
+
+      <div class="mb-3">
+        <label for="Informe" class="form-label">Rep N°</label>
+        <input type="text" class="form-control" id="rep" name="rep_numero" [(ngModel)]="informe.rep_numero"
+          placeholder="Rep N°" autocomplete="off" readonly>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!FormInforme.form.valid">Agregar</button>
+    </form>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="modalDownload" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalDownloadLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+   <button type="button" class="btn-close btn-close-download" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="file">
+          <p>{{ filename }}</p>
+        </div>
+        <mat-progress-bar *ngIf="download"
+        [mode]="download.state == 'PENDIENTE' ? 'buffer' : 'determinate'"
+        [value]="download.progress">
+        </mat-progress-bar>
+      </div>
+    </div>
+  </div>
+</div>

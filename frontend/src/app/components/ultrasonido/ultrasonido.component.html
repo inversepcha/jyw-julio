@@ -1,0 +1,607 @@
+<div class="flex items-start justify-between">
+  <div class="grid grid-cols-2 gap-x-4 gap-y-1" *ngIf="detallesOrden">
+    <div class="text-4xl tracking-tight text-secondary">Proyecto</div>
+    <div class="text-4xl">{{detallesOrden.proyecto}}</div>
+    <div class="font-medium tracking-tight text-secondary">Sub-proyecto</div>
+    <div class="font-medium">{{detallesOrden.subProyecto}}</div>
+    <div class="font-medium tracking-tight text-secondary">Consecutivo</div>
+    <div class="font-medium">{{detallesOrden.orden_consecutivo}}</div>
+    <div class="font-medium tracking-tight text-secondary">Fecha de inicio</div>
+    <div class="font-medium">{{detallesOrden.fecha_visita | date : 'mediumDate'}}</div>
+    <div class="font-medium tracking-tight text-secondary">Lugar de inspección</div>
+    <div class="font-medium">{{detallesOrden.lugar_visita}}</div>
+  </div>
+</div>
+
+<div class="projects-section-header">
+  <div class="flex sm items-start sm:items-center sm:justify-between py-8 px-6 px-8">
+    <div>
+      <div class="text-3xl font-extrabold tracking-tight leading-none">Informe de inspección Ultrasónica</div>
+    </div>
+  </div>
+</div>
+
+
+<form class="p-3 bg-card shadow rounded overflow-hidden" [formGroup]="Normas" *ngIf="autoSaveIndex">
+  <mat-stepper orientation="vertical" #stepper (selectionChange)="setIndex($event)" selectedIndex="{{autoSaveIndex.indexStepper}}">
+    <mat-step [stepControl]="Normas">
+      <form [formGroup]="Normas">
+        <ng-template matStepLabel>Normas</ng-template>
+        <div class="flex">
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Criterio de aceptacion</mat-label>
+            <textarea matInput [placeholder]="'Criterio de aceptacion'" [formControlName]="'criterio_aceptacion'"
+              autocomplete="off" required></textarea>
+          </mat-form-field>
+
+        </div>
+        <div class="flex">
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Procedimiento</mat-label>
+            <textarea matInput [placeholder]="'Procedimiento'" [formControlName]="'procedimiento'" autocomplete="off"
+              required></textarea>
+          </mat-form-field>
+        </div>
+        <div class="flex justify-end mt-8 ng-star-inserted">
+          <button type="submit" mat-button matStepperNext [disabled]="Normas.invalid" (click)="onSubmitNormas()"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="Juntas">
+      <form [formGroup]="Juntas">
+        <ng-template matStepLabel>Juntas</ng-template>
+        <div class="flex">
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Juntas</mat-label>
+            <textarea matInput [placeholder]="'Juntas'" [formControlName]="'juntas'" autocomplete="off"></textarea>
+          </mat-form-field>
+
+        </div>
+
+        <div class="flex justify-end mt-8 ng-star-inserted">
+          <button type="submit" mat-button matStepperNext [disabled]="Juntas.invalid" (click)="onSubmitJuntas()"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <mat-step [stepControl]="ElementosInspeccionados">
+      <form [formGroup]="ElementosInspeccionados">
+        <ng-template matStepLabel>
+          <div class="mat-step-custom-click"></div>
+          Elementos inspeccionados
+        </ng-template>
+        <quill-editor placeholder="Elementos Inspeccionados" [formControlName]="'elementos_inspeccionados'"
+          [modules]="quillModules">
+        </quill-editor>
+
+        <div class="flex justify-end mt-3">
+          <button
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+            mat-flat-button type="button" matStepperPrevious>
+            Atras
+          </button>
+          <button type="submit" mat-button matStepperNext matStepperNext (click)="onSubmitElementosInspeccionados()"
+            [disabled]="ElementosInspeccionados.invalid"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+
+
+      </form>
+    </mat-step>
+
+
+    <mat-step [stepControl]="Equipo_Utilizado">
+      <form [formGroup]="Equipo_Utilizado">
+        <ng-template matStepLabel>Equipo utilizado</ng-template>
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Marca</mat-label>
+            <input matInput [formControlName]="'marca'" [placeholder]="'Marca'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Modelo</mat-label>
+            <input matInput [formControlName]="'modelo'" [placeholder]="'Modelo'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Escala</mat-label>
+            <input matInput [formControlName]="'escala'" [placeholder]="'Escala'" autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Grado calibración [dB]</mat-label>
+            <input matInput [formControlName]="'grado_calibracion'" [placeholder]="'Grado calibración [dB]'"
+              autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Cable</mat-label>
+            <input matInput [formControlName]="'cable'" [placeholder]="'Cable'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Método de ensayo</mat-label>
+            <input matInput [formControlName]="'metodo_ensayo'" [placeholder]="'Método de ensayo'" autocomplete="off"
+              required>
+          </mat-form-field>
+        </div>
+        <div class="flex">
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Inspección</mat-label>
+            <input matInput [formControlName]="'inspeccion'" [placeholder]="'Inspección'" autocomplete="off" required>
+
+          </mat-form-field>
+        </div>
+
+        <div class="flex justify-end mt-8 ng-star-inserted">
+          <button type="submit" mat-button matStepperNext [disabled]="Normas.invalid"
+            (click)="onSubmitEquipoUtilizado()"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="Palpador">
+      <form [formGroup]="Palpador">
+        <ng-template matStepLabel>Palpador</ng-template>
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Tipo</mat-label>
+            <input matInput [formControlName]="'tipo'" [placeholder]="'Tipo'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Angulo (Grados)</mat-label>
+            <input matInput [formControlName]="'angulo'" [placeholder]="'Angulo (Grados)'" autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Frecuencia [Mhz]</mat-label>
+            <input matInput [formControlName]="'frecuencia'" [placeholder]="'Frecuencia [Mhz]'" autocomplete="off"
+              required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Dimensión</mat-label>
+            <input matInput [formControlName]="'dimension'" [placeholder]="'Dimensión'" autocomplete="off" required>
+          </mat-form-field>
+        </div>
+
+        <div class="flex justify-end">
+        </div>
+
+        <div class="flex justify-end mt-8 ng-star-inserted">
+          <button type="submit" mat-button matStepperNext [disabled]="Palpador.invalid" (click)="onSubmitPalpador()"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <mat-step [stepControl]="Soldadura">
+      <form [formGroup]="Soldadura">
+        <ng-template matStepLabel>Soldadura</ng-template>
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Proceso</mat-label>
+            <input matInput [formControlName]="'proceso'" [placeholder]="'Proceso'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Paso (mm)</mat-label>
+            <input matInput [formControlName]="'paso'" [placeholder]="'Paso (mm)'" autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>1/2 Paso (mm)</mat-label>
+            <input matInput [formControlName]="'paso_medio'" [placeholder]="'1/2 Paso (mm)'" autocomplete="off"
+              required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Rango</mat-label>
+            <input matInput [formControlName]="'rango'" [placeholder]="'Rango'" autocomplete="off" required>
+          </mat-form-field>
+
+
+        </div>
+
+        <div class="flex justify-end mt-8 ng-star-inserted">
+          <button type="submit" mat-button matStepperNext [disabled]="Palpador.invalid" (click)="onSubmitSoldadura()"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="Materiales">
+      <form [formGroup]="Materiales">
+        <ng-template matStepLabel>Materiales</ng-template>
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Material base</mat-label>
+            <input matInput [formControlName]="'material_base'" [placeholder]="'Material base'" autocomplete="off"
+              required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Espesor material base (mm)</mat-label>
+            <input matInput [formControlName]="'espesor_mat_base'" [placeholder]="'Espesor material base (mm)'"
+              autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Material aporte</mat-label>
+            <input matInput [formControlName]="'material_aporte'" [placeholder]="'Material aporte'" autocomplete="off"
+              required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Acoplante</mat-label>
+            <input matInput [formControlName]="'acoplante'" [placeholder]="'Acoplante'" autocomplete="off" required>
+          </mat-form-field>
+
+
+        </div>
+
+
+        <div class="flex justify-end mt-8 ng-star-inserted">
+          <button type="submit" mat-button matStepperNext [disabled]="Palpador.invalid" (click)="onSubmitMateriales()"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="descripcion">
+      <form [formGroup]="descripcion">
+        <ng-template matStepLabel>Descripción</ng-template>
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Elemento</mat-label>
+            <input matInput [formControlName]="'elemento'" [placeholder]="'Elemento'" autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+      </form>
+      <form [formGroup]="descripcionItem">
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Junta</mat-label>
+            <input matInput [formControlName]="'junta'" [placeholder]="'Junta'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Ubicación</mat-label>
+            <input matInput [formControlName]="'ubicacion'" [placeholder]="'Ubicación'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Estampe</mat-label>
+            <input matInput [formControlName]="'estampe'" [placeholder]="'Elemento'" autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+        <p class="my-6 font-medium">DECIBELES: </p>
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Decibeles a</mat-label>
+            <input matInput [formControlName]="'decibeles_a'" [placeholder]="'Decibeles a'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Decibeles b</mat-label>
+            <input matInput [formControlName]="'decibeles_b'" [placeholder]="'Decibeles b'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Decibeles c</mat-label>
+            <input matInput [formControlName]="'decibeles_c'" [placeholder]="'Decibeles c'" autocomplete="off" required>
+          </mat-form-field>
+
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Decibeles d</mat-label>
+            <input matInput [formControlName]="'decibeles_d'" [placeholder]="'Decibeles d'" autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+        <p class="my-6 font-medium">DISCONTINUIDAD: </p>
+        <div class="content-inputs flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>DIST</mat-label>
+            <input matInput [formControlName]="'dist'" [placeholder]="'DIST'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>PROF (mm)</mat-label>
+            <input matInput [formControlName]="'prof_mm'" [placeholder]="'PROF (mm)'" autocomplete="off" required>
+          </mat-form-field>
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>DIST. Y (mm)</mat-label>
+            <input matInput [formControlName]="'dist_y_mm'" [placeholder]="'DIST. Y (mm)'" autocomplete="off" required>
+          </mat-form-field>
+
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>DIST. X (mm)</mat-label>
+            <input matInput [formControlName]="'dist_x_mm'" [placeholder]="'DIST. X (mm)'" autocomplete="off" required>
+          </mat-form-field>
+
+        </div>
+        <div class="flex">
+
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>EVAL.</mat-label>
+            <mat-select [formControlName]="'eval'" required>
+              <mat-option value="C(xR )">Conforme luego x Reparación</mat-option>
+              <mat-option value="C">Conforme</mat-option>
+              <mat-option value="NC">No Conforme</mat-option>
+              <mat-option value="RI">Re inspeccionar</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+        <div class="flex justify-end m-2">
+          <button type="submit"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base  btn btn-success"
+            (click)="addItem()" mat-flat-button type="button">
+            Añadir
+          </button>
+        </div>
+
+        <table class="table table-hover" *ngIf="descripcionItemArray.length > 0">
+          <thead>
+            <tr>
+              <th rowspan="2">Junta</th>
+              <th rowspan="2">Ubicación</th>
+              <th rowspan="2">Estampe</th>
+              <th colspan="4">Decibeles</th>
+              <th colspan="4">Discontinuidad</th>
+              <th rowspan="2">EVAL.</th>
+            </tr>
+            <tr>
+              <th>a</th>
+              <th>b</th>
+              <th>c</th>
+              <th>d</th>
+              <th>DIST.</th>
+              <th>PROF (mm)</th>
+              <th>DIST.Y (mm)</th>
+              <th>DIST.X (mm)</th>
+            </tr>
+
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of descripcionItemArray">
+              <td> {{item.junta}} </td>
+              <td>{{item.ubicacion}}</td>
+              <td>{{item.estampe}}</td>
+              <td> {{item.decibeles_a}} </td>
+              <td>{{item.decibeles_b}}</td>
+              <td>{{item.decibeles_c}}</td>
+              <td>{{item.decibeles_d}}</td>
+              <td>{{item.dist}}</td>
+              <td>{{item.prof_mm}}</td>
+              <td>{{item.dist_y_mm}}</td>
+              <td>{{item.dist_x_mm}}</td>
+              <td>{{item.eval}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-hover" *ngIf="descripcionItemArray.length == 0">
+          <thead>
+            <tr>
+              <th rowspan="2" >Elemento</th>
+              <th rowspan="2">Junta</th>
+              <th rowspan="2">Ubicación</th>
+              <th rowspan="2">Estampe</th>
+              <th colspan="4">Decibeles</th>
+              <th colspan="4">Discontinuidad</th>
+              <th rowspan="2">EVAL.</th>
+            </tr>
+            <tr>
+              <th>a</th>
+              <th>b</th>
+              <th>c</th>
+              <th>d</th>
+              <th>DIST.</th>
+              <th>PROF (mm)</th>
+              <th>DIST.Y (mm)</th>
+              <th>DIST.X (mm)</th>
+            </tr>
+
+          </thead>
+          <tbody>
+            <ng-container  *ngFor="let item of descripcionArray">
+              <tr>
+                <td [rowSpan]="item.items.length + 1"> {{item.elemento}}</td>
+              </tr>
+              <tr *ngFor="let items of item.items">
+                <td> {{items.junta}} </td>
+                <td>{{items.ubicacion}}</td>
+                <td>{{items.estampe}}</td>
+                <td> {{items.decibeles_a}} </td>
+                <td>{{items.decibeles_b}}</td>
+                <td>{{items.decibeles_c}}</td>
+                <td>{{items.decibeles_d}}</td>
+                <td>{{items.dist}}</td>
+                <td>{{items.prof_mm}}</td>
+                <td>{{items.dist_y_mm}}</td>
+                <td>{{items.dist_x_mm}}</td>
+                <td>{{items.eval}}</td>
+              </tr>
+            </ng-container>
+
+          </tbody>
+        </table>
+
+      </form>
+
+      <div *ngIf="descripcionItemArray.length > 0">
+        <button type="submit" mat-button
+        (click)="onSubmitDescripcion()"
+        class="mat-button-base btn btn-success">
+        <span class="mat-button-wrapper"> Finalizar </span>
+        <span matripple class="mat-ripple mat-button-ripple"></span>
+        <span class="mat-button-focus-overlay"></span></button>
+
+      </div>
+      <div class="flex justify-end mt-8 ng-star-inserted">
+        <button type="submit" mat-button matStepperNext
+          class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+          <span class="mat-button-wrapper"> Siguiente </span>
+          <span matripple class="mat-ripple mat-button-ripple"></span>
+          <span class="mat-button-focus-overlay"></span></button>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="observaciones">
+      <form [formGroup]="observaciones">
+        <ng-template matStepLabel>
+          <div class="mat-step-custom-click"></div>
+          Observaciones
+        </ng-template>
+        <quill-editor placeholder="Elementos Inspeccionados" [formControlName]="'observaciones'"
+          [modules]="quillModules">
+        </quill-editor>
+
+        <div class="flex justify-end mt-3">
+          <button
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+            mat-flat-button type="button" matStepperPrevious>
+            Atras
+          </button>
+          <button type="submit" mat-button matStepperNext matStepperNext (click)="onSubmitObservaciones()"
+            [disabled]="ElementosInspeccionados.invalid"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save">
+            <span class="mat-button-wrapper"> Siguiente </span>
+            <span matripple class="mat-ripple mat-button-ripple"></span>
+            <span class="mat-button-focus-overlay"></span></button>
+        </div>
+
+
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="RegistroFotosForm">
+      <form [formGroup]="RegistroFotosForm">
+        <ng-template matStepLabel>
+          <div class="mat-step-custom-click"></div>
+          Registro Fotográfico
+        </ng-template>
+        <br>
+        <div class="flex">
+          <mat-form-field class="flex-auto" appearance="outline">
+            <mat-label>Titulo</mat-label>
+            <input matInput [formControlName]="'title'" name="title" [placeholder]="'Titulo'" autocomplete="off"
+              required>
+            <mat-icon class="icon-size-5 icon-form" matPrefix>title</mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="content-inputs">
+          <div class="mb-3">
+            <label for="formFileSm" class="form-label">Seleccione las imágenes</label>
+            <input class="form-control form-control-sm" (change)="onPhotoSelectedRegistroFotos($event)"
+              id="formFileSmRegistroFotos" type="file" accept="image/x-png,image/jpeg,image/jpg"
+              #formFileSmRegistroFotos>
+          </div>
+        </div>
+        <div class="flex justify-end mb-3">
+          <button type="submit"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base  btn btn-success bt-m"
+            mat-flat-button type="submit" (click)="onSubmitRegistroFotos()">
+            Añadir
+          </button>
+        </div>
+
+        <div class="marging row-img">
+          <div class="column-img">
+            <mat-grid-list cols="2" rowHeight="2:1">
+              <mat-grid-tile *ngFor="let item of RegistroFotos; index as i;">
+
+                <img mat-card-image [src]="url+'/img-uploads/' + item.image" alt="{{item.title}}"
+                  (click)="showLightboxRegistroFotos(i)" class="img">
+
+
+                <mat-grid-tile-footer>
+                  <h3 mat-line>Registro Fotográfico N° {{i+1}}</h3>
+                  <span mat-line> {{item.title}} </span>
+                  <button mat-mini-fab color="warn" (click)="deleteRegistroFoto(item._id)">
+                    <mat-icon>restore_from_trash</mat-icon>
+                  </button>
+                </mat-grid-tile-footer>
+
+              </mat-grid-tile>
+            </mat-grid-list>
+          </div>
+        </div>
+        <ng-image-fullscreen-view [images]="imageObjectRegistroFotos" [imageIndex]="selectedImageIndexRegistroFotos"
+          [show]="showFlagRegistroFotos" (close)="closeEventHandlerRegistroFotos()"></ng-image-fullscreen-view>
+        <div class="flex justify-end mt-3">
+          <button
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary back mr-2"
+            mat-flat-button type="button" matStepperPrevious>
+            Atras
+          </button>
+          <button type="button"
+            class="mat-focus-indicator mat-stepper-next px-8 mat-flat-button mat-button-base mat-primary next-save"
+            mat-flat-button type="button" matStepperNext>
+            Siguiente
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+  </mat-stepper>
+</form>

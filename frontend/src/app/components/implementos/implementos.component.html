@@ -1,0 +1,415 @@
+<div class="projects-section-header">
+    <h2>Implementos</h2>
+</div>
+
+<div class="card" id="Table">
+    <div class="card-header">
+        <button type="button" class="btn btn-success" (click)="tiposImplementos()" data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            style="border-radius: 20px !important; font-family: Arial, Helvetica, sans-serif;">
+            <i class="fas fa-plus-circle"></i> &nbsp; <strong>Agregar Implemento</strong>
+        </button>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Nombre</strong></th>
+                        <th><strong>Marca</strong></th>
+                        <th><strong>Tipo de Implemento</strong></th>
+                        <th><strong>cantidad</strong></th>
+                        <th><strong>seriales</strong></th>
+                        <th><strong>Acciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let implemento of implementos">
+                        <td>{{ implemento.nombre }}</td>
+                        <td>{{ implemento.marca }}</td>
+
+                        <td>{{ implemento.tipo_implemento_id }}</td>
+                        <td>{{ implemento.cantidad }}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#seriales"
+                                (click)="getSeriales(implemento.id)">
+                                <strong>Ver seriales</strong>
+                            </button>
+                        </td>
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-icon" type="button" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h" data-toggle="tooltip" data-placement="top" title=""
+                                        data-original-title="Actions"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li>
+                                        <a class="dropdown-item" data-bs-toggle="modal"
+                                            data-bs-target="#editarImplemento" href="#"
+                                            (click)='getImplemento(implemento.id); tiposImplementos()'><i
+                                                style="color: rgb(26, 25, 25);" class="fas fa-pencil-alt"></i>
+                                            &nbsp; <strong>Editar</strong></a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" (click)="deleteImplemento(implemento.id)"
+                                            style="cursor: pointer;"><i style="color: rgb(148, 21, 21);"
+                                                class="fas fa-trash"></i> &nbsp; <strong>Eliminar</strong></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Implemento</h5>
+                <button type="button" class="btn-close btn-close-add" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form #FormSaveImplemento="ngForm" (ngSubmit)="SaveImplemento()">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": nombreImplemento.invalid && (nombreImplemento.dirty || nombreImplemento.touched)}'>Nombre</label>
+                        <input type="text" class="form-control" name="nombre"
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="nuevoImplemento.nombre"
+                            placeholder="Ingrese el Nombre" autocomplete="off" #nombreImplemento="ngModel"
+                            [ngClass]='{"errorForm": nombreImplemento.invalid && (nombreImplemento.dirty || nombreImplemento.touched)}'
+                            required />
+                        <div id="perf"
+                            *ngIf="nombreImplemento.invalid && (nombreImplemento.dirty || nombreImplemento.touched) ">
+                            <div class="errorValidate" *ngIf="nombreImplemento.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+                            {{ errorMessage }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": marcaImplemento.invalid && (marcaImplemento.dirty || marcaImplemento.touched)}'>Marca</label>
+                        <input type="text" class="form-control" name="marca"
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="nuevoImplemento.marca"
+                            placeholder="Ingrese la Marca" autocomplete="off" #marcaImplemento="ngModel"
+                            [ngClass]='{"errorForm": marcaImplemento.invalid && (marcaImplemento.dirty || marcaImplemento.touched)}'
+                            required />
+                        <div id="perf"
+                            *ngIf="marcaImplemento.invalid && (marcaImplemento.dirty || marcaImplemento.touched) ">
+                            <div class="errorValidate" *ngIf="marcaImplemento.errors?.required">
+                                Proporcione una marca válida.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": TipoImplemento.invalid && (TipoImplemento.dirty || TipoImplemento.touched)}'>Tipo
+                            de Implemento</label>
+                        <select class="form-control" name="tipo_implemento_id" id="tipo_implemento_id"
+                            [(ngModel)]="nuevoImplemento.tipo_implemento_id" #TipoImplemento="ngModel"
+                            [ngClass]='{"errorForm": TipoImplemento.invalid && (TipoImplemento.dirty || TipoImplemento.touched)}'
+                            required>
+                            <option value="">-- Seleccione --</option>
+                            <option *ngFor="let tipoImplementos of tipoImplementos" value="{{tipoImplementos.id}}">
+                                {{tipoImplementos.nombre}}</option>
+                        </select>
+                        <div id="perf"
+                            *ngIf="TipoImplemento.invalid && (TipoImplemento.dirty || TipoImplemento.touched) ">
+                            <div class="errorValidate" *ngIf="TipoImplemento.errors?.required">
+                                Selleccione una opción válida.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+                        <div class="col-md-4 mb-3">
+                            <label for="">Serial</label>
+                            <input type="text" class="form-control" name="serial" id='serial'
+                                oninput="this.value = this.value.toUpperCase()" placeholder="Ingrese el Serial"
+                                [(ngModel)]="serialdata" [ngModelOptions]="{standalone: true}" autocomplete="off" />
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+                            <label for="">Modelo</label>
+                            <input type="text" class="form-control" name="modelo" id='modelo'
+                                oninput="this.value = this.value.toUpperCase()" placeholder="Ingrese el Modelo"
+                                [(ngModel)]="modelodata" [ngModelOptions]="{standalone: true}" />
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="">Código N</label>
+                            <input type="text" class="form-control" name="codigo" id='codigo'
+                                oninput="this.value = this.value.toUpperCase()" placeholder="Ingrese el Código N"
+                                [(ngModel)]="codigodata" [ngModelOptions]="{standalone: true}" />
+                        </div>
+                    </div>
+                    <div *ngIf="errorSerialImplemento" class="alert alert-warning mt-3" role="alert">
+                        {{errorSerialImplemento}}
+                    </div>
+                    <button type="button" class="btn btn-outline-primary" (click)="Agregar_Serial()">
+                        Añadir
+                    </button>
+
+                    <div class="form-group col-12">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th><strong>#</strong></th>
+                                    <th><strong>Serial</strong></th>
+                                    <th><strong>Modelo</strong></th>
+                                    <th><strong>Código N</strong></th>
+                                    <th style="width: 40px"><strong>Eliminar</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb">
+                                <tr *ngFor="let dataserial of dataserial; let indice = index">
+                                    <td>{{ indice + 1 }}</td>
+                                    <td>{{ dataserial.serial }}</td>
+                                    <td> {{dataserial.modelo}} </td>
+                                    <td> {{dataserial.codigo_n}} </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger" (click)="remover(dataserial)">
+                                            X
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success" [disabled]="!FormSaveImplemento.form.valid">
+                            Guardar Implemento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seriales -->
+<div class="modal fade" id="seriales" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Seriales del Implemento
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #FormAddSerial="ngForm" (ngSubmit)="addSerial()">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="text" class="form-control"
+                                            oninput="this.value = this.value.toUpperCase()"
+                                            [(ngModel)]="newSerial.serial" name="serial" placeholder="Serial"
+                                            autocomplete="off" #serialImplemento="ngModel"
+                                            [ngClass]='{"errorForm": serialImplemento.invalid && (serialImplemento.dirty || serialImplemento.touched)}'
+                                            required />
+                                        <div id="perf"
+                                            *ngIf="serialImplemento.invalid && (serialImplemento.dirty || serialImplemento.touched) ">
+                                            <div class="errorValidate" *ngIf="serialImplemento.errors?.required">
+                                                Proporcione un serial válido.
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <input type="text" class="form-control"
+                                            oninput="this.value = this.value.toUpperCase()"
+                                            [(ngModel)]="newSerial.modelo" name="modelo" placeholder="Modelo"
+                                            autocomplete="off" #ModeloImplemento="ngModel"
+                                            [ngClass]='{"errorForm": ModeloImplemento.invalid && (ModeloImplemento.dirty || ModeloImplemento.touched)}'
+                                            required />
+                                        <div id="perf"
+                                            *ngIf="ModeloImplemento.invalid && (ModeloImplemento.dirty || ModeloImplemento.touched) ">
+                                            <div class="errorValidate" *ngIf="ModeloImplemento.errors?.required">
+                                                Proporcione un modelo válido.
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th colspan="2">
+                                        <input type="text" class="form-control"
+                                            oninput="this.value = this.value.toUpperCase()"
+                                            [(ngModel)]="newSerial.codigo_n" name="codigo" placeholder="Código N"
+                                            autocomplete="off" #CodigoNImplemento="ngModel"
+                                            [ngClass]='{"errorForm": CodigoNImplemento.invalid && (CodigoNImplemento.dirty || CodigoNImplemento.touched)}'
+                                            required />
+                                        <div id="perf"
+                                            *ngIf="CodigoNImplemento.invalid && (CodigoNImplemento.dirty || CodigoNImplemento.touched) ">
+                                            <div class="errorValidate" *ngIf="CodigoNImplemento.errors?.required">
+                                                Proporcione un codigo N válido.
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <button type="submit" class="btn btn-sm btn-success"
+                                            [disabled]="!FormAddSerial.form.valid">
+                                            Adicionar
+                                        </button>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>Serial</th>
+                                    <th>modelo</th>
+                                    <th>Codigo N</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr *ngIf="errorSerialMessage">
+                                    <td colspan="3">
+                                        <div class="alert alert-warning" role="alert">
+                                            {{ errorSerialMessage }}
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr *ngFor="let seriales of seriales">
+                                    <td>{{ seriales.serial }}</td>
+                                    <td>{{ seriales.modelo }}</td>
+                                    <td>{{ seriales.codigo_n }}</td>
+                                    <td>
+                                        <span *ngIf="seriales.estado == 0" class="btn status active btn-sm">
+                                            Disponible
+                                        </span>
+                                        <span *ngIf="seriales.estado == 1" class="btn status disabled-btn btn-sm">
+                                            Asignado
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-icon" type="button" role="button"
+                                                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-h" data-toggle="tooltip" data-placement="top"
+                                                    title="" data-original-title="Actions"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <li>
+                                                    <a class="dropdown-item text-danger"
+                                                        (click)="deleteSerial(seriales.id, seriales.implemento_id)"><i
+                                                            class="fas fa-trash"></i>
+                                                        Eliminar</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editarImplemento" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modificar Implemento</h5>
+                <button type="button" class="btn-close btn-close-edit" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #FormUpdateImplemento="ngForm" (ngSubmit)="updateImplemento()">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarNombreImplemento.invalid && (ModificarNombreImplemento.dirty || ModificarNombreImplemento.touched)}'>Modificar
+                            Nombre</label>
+                        <input type="text" class="form-control" name="editarNombre"
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="editarImplemento.nombre"
+                            placeholder="Ingrese el Nombre" autocomplete="off" #ModificarNombreImplemento="ngModel"
+                            [ngClass]='{"errorForm": ModificarNombreImplemento.invalid && (ModificarNombreImplemento.dirty || ModificarNombreImplemento.touched)}'
+                            required />
+                        <div id="perf"
+                            *ngIf="ModificarNombreImplemento.invalid && (ModificarNombreImplemento.dirty || ModificarNombreImplemento.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarNombreImplemento.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="errorMessageEdit">
+                            {{ errorMessageEdit }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarModeloImplemento.invalid && (ModificarModeloImplemento.dirty || ModificarModeloImplemento.touched)}'>Modificar
+                            Marca</label>
+                        <input type="text" class="form-control" name="editarMarca"
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="editarImplemento.marca"
+                            placeholder="Ingrese la Marca" autocomplete="off" #ModificarModeloImplemento="ngModel"
+                            [ngClass]='{"errorForm": ModificarModeloImplemento.invalid && (ModificarModeloImplemento.dirty || ModificarModeloImplemento.touched)}'
+                            required />
+                        <div id="perf"
+                            *ngIf="ModificarModeloImplemento.invalid && (ModificarModeloImplemento.dirty || ModificarModeloImplemento.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarModeloImplemento.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarTipoImplemento.invalid && (ModificarTipoImplemento.dirty || ModificarTipoImplemento.touched)}'>Modificar
+                            Tipo de Implemento</label>
+                        <select class="form-control" name="tipo_implemento_id" id="tipo_implemento_id"
+                            [(ngModel)]="editarImplemento.tipo_implemento_id"
+                            #ModificarTipoImplemento="ngModel"
+                            [ngClass]='{"errorForm": ModificarTipoImplemento.invalid && (ModificarTipoImplemento.dirty || ModificarTipoImplemento.touched)}'
+                            required >
+                            <option disabled value="">-- Seleccione --</option>
+                            <option *ngFor="let tipoImplementos of tipoImplementos" value="{{tipoImplementos.id}}">
+                                {{tipoImplementos.nombre}}</option>
+                        </select>
+                        <div id="perf"
+                            *ngIf="ModificarTipoImplemento.invalid && (ModificarTipoImplemento.dirty || ModificarTipoImplemento.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarTipoImplemento.errors?.required">
+                                Seleccione un opcion válida.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success" [disabled]="!FormUpdateImplemento.form.valid">
+                            Modificar Implemento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

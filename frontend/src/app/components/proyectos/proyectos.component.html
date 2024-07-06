@@ -1,0 +1,244 @@
+<div class="projects-section-header">
+    <h2>Proyectos</h2>
+</div>
+
+<div class="card" id="Table">
+    <div class="card-header">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            style="border-radius: 20px !important; font-family: Arial, Helvetica, sans-serif;">
+            <i class="fas fa-plus-circle"></i> &nbsp; <strong>Agregar Proyecto</strong>
+        </button>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions"  [dtTrigger]="dtTrigger"  class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Nombre</strong></th>
+                        <th><strong>Descripción</strong></th>
+                        <th><strong>cliente</strong></th>
+                        <th><strong>Ubicación</strong></th>
+                        <th><strong>Sub-proyectos</strong></th>
+                        <th><strong>Acciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let proyectos of proyectos">
+                        <td>{{proyectos.nombre_proyecto}} </td>
+                        <td> {{proyectos.descripcion}} </td>
+                        <td>{{proyectos.cliente}}</td>
+                        <td>{{proyectos.ubicacion}}</td>
+                        <td>
+                            <a [routerLink]="['/sub-proyectos', proyectos.id]"
+                                class="btn btn-primary btn-sm sub-proyecto" style="color: white;"><strong>
+                                    {{proyectos.SubProyectoscount}} </strong></a>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-icon" type="button" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h" data-toggle="tooltip" data-placement="top" title=""
+                                        data-original-title="Actions"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li>
+                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editProyecto"
+                                            href="#" (click)="getProyecto(proyectos.id);"><i
+                                                style="color: rgb(26, 25, 25);" class="fas fa-pencil-alt"></i> &nbsp;
+                                            <strong>Editar</strong></a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" (click)="deleteProyecto(proyectos.id)"
+                                            style="cursor: pointer;"><i style="color: rgb(148, 21, 21);"
+                                                class="fas fa-trash"></i>
+                                            &nbsp; <strong>Eliminar</strong></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form #FormAddProyecto="ngForm" (ngSubmit)="addProyecto()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Proyecto</h5>
+                    <button type="button" class="btn-close btn-close-add" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": nombreProyecto.invalid && (nombreProyecto.dirty || nombreProyecto.touched)}'>Nombre</label>
+                        <input type="text" class="form-control" name='nombre'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="nuevoProyecto.nombre_proyecto"
+                            placeholder="Nombre" autocomplete="off" #nombreProyecto="ngModel"
+                            [ngClass]='{"errorForm": nombreProyecto.invalid && (nombreProyecto.dirty || nombreProyecto.touched)}'
+                            required>
+                        <div id="perf"
+                            *ngIf="nombreProyecto.invalid && (nombreProyecto.dirty || nombreProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="nombreProyecto.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+                            {{errorMessage}}
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": descripcionProyecto.invalid && (descripcionProyecto.dirty || descripcionProyecto.touched)}'>Descripción</label>
+                        <input type="text" class="form-control" name='decripcion'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="nuevoProyecto.descripcion"
+                            placeholder="Descripción" autocomplete="off" #descripcionProyecto="ngModel"
+                            [ngClass]='{"errorForm": descripcionProyecto.invalid && (descripcionProyecto.dirty || descripcionProyecto.touched)}'
+                            required>
+                        <div id="perf"
+                            *ngIf="descripcionProyecto.invalid && (descripcionProyecto.dirty || descripcionProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="descripcionProyecto.errors?.required">
+                                Proporcione una descripcion válida.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": clienteProyecto.invalid && (clienteProyecto.dirty || clienteProyecto.touched)}'>Cliente</label>
+                        <ng-select2 [(ngModel)]="nuevoProyecto.cliente_id" name="cliente" [required]="true"
+                            #clienteProyecto="ngModel"
+                            [ngClass]='{"errorForm":(clienteProyecto.touched || clienteProyecto.dirty)&&clienteProyecto.invalid }'
+                            [placeholder]="'Seleccione un cliente'" [options]="optionsAdd">
+                        </ng-select2>
+                        <div id="perf"
+                            *ngIf="clienteProyecto.invalid && (clienteProyecto.dirty || clienteProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="clienteProyecto.errors?.required">
+                                Proporcione un cliente válido.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ubicacionProyecto.invalid && (ubicacionProyecto.dirty || ubicacionProyecto.touched)}'>Ubicación</label>
+                        <input type="text" class="form-control" name='ubicacion'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="nuevoProyecto.ubicacion"
+                            placeholder="Ubicación" #ubicacionProyecto="ngModel"
+                            [ngClass]='{"errorForm":(ubicacionProyecto.touched || ubicacionProyecto.dirty)&&ubicacionProyecto.invalid }'
+                            required autocomplete="off">
+                        <div id="perf"
+                            *ngIf="ubicacionProyecto.invalid && (ubicacionProyecto.dirty || ubicacionProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="ubicacionProyecto.errors?.required">
+                                Proporcione una ubicación válida.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="!FormAddProyecto.form.valid">Guardar
+                        Proyecto</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="editProyecto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form #FormUpdateProyecto="ngForm" (ngSubmit)="UpdateProyecto()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modificar Proyecto</h5>
+                    <button type="button" class="btn-close btn-close-edit" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarNombreProyecto.invalid && (ModificarNombreProyecto.dirty || ModificarNombreProyecto.touched)}'>Nombre</label>
+                        <input type="text" class="form-control" name='nombre'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="editProyecto.nombre_proyecto"
+                            #ModificarNombreProyecto="ngModel"
+                            [ngClass]='{"errorForm":(ModificarNombreProyecto.touched || ModificarNombreProyecto.dirty)&&ModificarNombreProyecto.invalid }'
+                            placeholder="Nombre" autocomplete="off" required>
+                        <div
+                            *ngIf="ModificarNombreProyecto.invalid && (ModificarNombreProyecto.dirty || ModificarNombreProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarNombreProyecto.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+                            {{errorMessage}}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarDescripcionProyecto.invalid && (ModificarDescripcionProyecto.dirty || ModificarDescripcionProyecto.touched)}'>Descripción</label>
+                        <input type="text" class="form-control" name='decripcion'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="editProyecto.descripcion"
+                            #ModificarDescripcionProyecto="ngModel"
+                            [ngClass]='{"errorForm":(ModificarDescripcionProyecto.touched || ModificarDescripcionProyecto.dirty)&&ModificarDescripcionProyecto.invalid }'
+                            placeholder="Descripción" autocomplete="off" required>
+                        <div
+                            *ngIf="ModificarDescripcionProyecto.invalid && (ModificarDescripcionProyecto.dirty || ModificarDescripcionProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarDescripcionProyecto.errors?.required">
+                                Proporcione una descripción válida.
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarClienteProyecto.invalid && (ModificarClienteProyecto.dirty || ModificarClienteProyecto.touched)}'>Cliente</label>
+                        <ng-select2 [(ngModel)]="editProyecto.cliente_id" name="editcliente" [required]="true"
+                            #ModificarClienteProyecto="ngModel"
+                            [ngClass]='{"errorForm":(ModificarClienteProyecto.touched || ModificarClienteProyecto.dirty)&&ModificarClienteProyecto.invalid }'
+                            [placeholder]="'Seleccione un cliente a modificar'" [options]="optionsEdit">
+                        </ng-select2>
+                        <div
+                            *ngIf="ModificarClienteProyecto.invalid && (ModificarClienteProyecto.dirty || ModificarClienteProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarClienteProyecto.errors?.required">
+                                Seleccion un clinete válido.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarUbicacionProyecto.invalid && (ModificarUbicacionProyecto.dirty || ModificarUbicacionProyecto.touched)}'>Ubicación</label>
+                        <input type="text" class="form-control" name='ubicacion'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="editProyecto.ubicacion"
+                            #ModificarUbicacionProyecto="ngModel"
+                            [ngClass]='{"errorForm":(ModificarUbicacionProyecto.touched || ModificarUbicacionProyecto.dirty)&&ModificarUbicacionProyecto.invalid }'
+                            placeholder="Ubicación" autocomplete="off" required>
+                        <div
+                            *ngIf="ModificarUbicacionProyecto.invalid && (ModificarUbicacionProyecto.dirty || ModificarUbicacionProyecto.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarUbicacionProyecto.errors?.required">
+                                Proporcione una Ubicación válida.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="!FormUpdateProyecto.form.valid">Modificar Proyecto</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

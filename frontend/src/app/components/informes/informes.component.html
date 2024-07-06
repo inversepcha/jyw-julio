@@ -1,0 +1,31 @@
+<div class="projects-section-header">
+
+  <h2>Rutas Informes</h2>
+</div>
+
+<div class="card" id="Table">
+  <div class="card-header">
+  </div>
+  <div class="card-body">
+      <div class="table-responsive">
+          <table class="table table-hover">
+              <thead>
+                  <tr>
+                      <th><strong>Nombre</strong></th>
+                      <th><strong>Ruta</strong></th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rutaInforme of rutasInformes" >
+                  <td> {{rutaInforme.nombre}} </td>
+                  <td routerLink="/opciones_informes/{{rutaInforme._id}}">{{rutaInforme.router}}</td>
+                </tr>
+              </tbody>
+          </table>
+          <br><br>
+      </div>
+
+  </div>
+</div>
+
+

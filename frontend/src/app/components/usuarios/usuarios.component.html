@@ -1,0 +1,240 @@
+<div class="projects-section-header">
+
+    <h2>Usuarios</h2>
+</div>
+
+<div class="card" id="Table">
+    <div class="card-header">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            style="border-radius: 20px !important; font-family: Arial, Helvetica, sans-serif;">
+            <i class="fas fa-plus-circle"></i> &nbsp; <strong>Agregar Usuario</strong>
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions"  [dtTrigger]="dtTrigger" class="table table-hover" >
+                <thead>
+                    <tr>
+                        <th><strong>Nombre de usuario</strong></th>
+                        <th><strong>Usuario</strong></th>
+                        <th><strong>perfil</strong></th>
+                        <th><strong>Estado</strong></th>
+                        <th><strong>Ultimo login</strong></th>
+                        <th><strong>Acciones</strong></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of usuarios">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar mr-3"><img src="{{url + '/image-user/' + usuario.image}}"
+                                        class="img-user" /></div>
+
+                                <div class="">
+                                    <p class="text-muted mb-0"> &nbsp; {{usuario.nombre_usuario}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{usuario.usuario}}</td>
+                        <td>{{usuario.perfil}}</td>
+                        <td>
+                            <button *ngIf="usuario.estado == 0" (click)="updateStatus(1, usuario.id)"
+                                class="btn status active btn-sm"><strong>Activo</strong></button>
+                            <button *ngIf="usuario.estado == 1" (click)="updateStatus(0, usuario.id)"
+                                class="btn status disabled-btn btn-sm"><strong>Desactivado</strong></button>
+
+                        </td>
+                        <td>
+                            {{usuario.ultimo_login | date: 'dd/MM/yyyy hh:mm'}}
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-icon" type="button" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h" data-toggle="tooltip" data-placement="top" title=""
+                                        data-original-title="Actions"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" (click)='getUsuario(usuario.id)'
+                                            data-bs-target="#exampleModal2" href='#'><i style="color: rgb(26, 25, 25);"
+                                                class="fas fa-pencil-alt"></i>
+                                            &nbsp; <strong>Editar</strong> </a></li>
+                                    <li><a class="dropdown-item text-danger" (click)='deleteUsuario(usuario.id)'
+                                            style="cursor: pointer;"><i style="color: rgb(148, 21, 21);"
+                                                class="fas fa-trash"></i> &nbsp;
+                                            <strong>Eliminar</strong> </a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form #formUsuario="ngForm" (ngSubmit)='addUsuario()'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar usuario</h5>
+                    <button type="button" class="btn-close btn-close-add" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombre_usuario" class="form-label"
+                            [ngClass]='{"errorLabel": nombre_usuario.invalid && (nombre_usuario.dirty || nombre_usuario.touched)}'>Nombre
+                            de usuario</label>
+                        <input type="text" class="form-control" name='nombre_usuario' id='nombre_usuario'
+                            [(ngModel)]="nuevoUsuario.nombre_usuario" placeholder="Ingrese el nombre del usuario"
+                            autocomplete="off" #nombre_usuario='ngModel'
+                            [ngClass]='{"errorForm":(nombre_usuario.touched || nombre_usuario.dirty)&&nombre_usuario.invalid }'
+                            required>
+
+                        <div *ngIf="nombre_usuario.invalid && (nombre_usuario.dirty || nombre_usuario.touched) ">
+                            <div class="errorValidate" *ngIf="nombre_usuario.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="usuario" class="form-label"
+                            [ngClass]='{"errorLabel": usuario.invalid && (usuario.dirty || usuario.touched)}'>Usuario</label>
+                        <input type="text" class="form-control" name='usuario' id="usuario"
+                            [(ngModel)]="nuevoUsuario.usuario" placeholder="Ingrese el usuario" autocomplete="off"
+                            [ngClass]='{"errorForm": usuario.invalid && (usuario.dirty || usuario.touched)}'
+                            #usuario='ngModel' required>
+
+                        <div id="usuar" *ngIf="usuario.invalid && (usuario.dirty || usuario.touched) ">
+                            <div class="errorValidate" *ngIf="usuario.errors?.required">
+                                Proporcione un usuario válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="message">
+                            {{message}}
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label"
+                            [ngClass]='{"errorLabel": password.invalid && (password.dirty || password.touched)}'>Contraseña</label>
+                        <input type="text" class="form-control" name='password' id="password"
+                            [(ngModel)]="nuevoUsuario.password" placeholder="Ingrese la clave" autocomplete="off"
+                            #password='ngModel'
+                            [ngClass]='{"errorForm": password.invalid && (password.dirty || password.touched)}'
+                            required>
+                        <div id="pass" *ngIf="password.invalid && (password.dirty || password.touched) ">
+                            <div class="errorValidate" *ngIf="password.errors?.required">
+                                Proporcione una contraseña válida.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="perfil" class="form-label"
+                            [ngClass]='{"errorLabel": perfil.invalid && (perfil.dirty || perfil.touched)}'>Perfil</label>
+                        <select class="form-control" name="perfil" id="perfil" [(ngModel)]="nuevoUsuario.perfil"
+                            #perfil='ngModel'
+                            [ngClass]='{"errorForm": perfil.invalid && (perfil.dirty || perfil.touched)}' required>
+                            <option value="" selected disabled>-- Seleccione --</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Operador">Operador</option>
+                        </select>
+                        <div id="perf" *ngIf="perfil.invalid && (perfil.dirty || perfil.touched) ">
+                            <div class="errorValidate" *ngIf="perfil.errors?.required">
+                                Seleccione una opción válida.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success" [disabled]="!formUsuario.form.valid">Guardar
+                            Usuario</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form #formModificarUser="ngForm" (ngSubmit)='editUsuario()'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modificar usuario</h5>
+                    <button type="button" class="btn-close btn-close-edit" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nombre_usuarioedit" class="form-label"
+                            [ngClass]='{"errorLabel": ModificarNombre_usuario.invalid && (ModificarNombre_usuario.dirty || ModificarNombre_usuario.touched)}'>Modificar
+                            Nombre de usuario</label>
+                        <input type="text" class="form-control" name='nombre_usuario' id="nombre_usuarioedit"
+                            [(ngModel)]="editarUsuario.nombre_usuario" placeholder="Ingrese el nombre del usuario"
+                            autocomplete="off" #ModificarNombre_usuario='ngModel'
+                            [ngClass]='{"errorForm":(ModificarNombre_usuario.touched || ModificarNombre_usuario.dirty)&&ModificarNombre_usuario.invalid }'
+                            required>
+                        <div
+                            *ngIf="ModificarNombre_usuario.invalid && (ModificarNombre_usuario.dirty || ModificarNombre_usuario.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarNombre_usuario.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": ModificaUsuario.invalid && (ModificaUsuario.dirty || ModificaUsuario.touched)}'>Modificar
+                            Usuario</label>
+                        <input type="text" class="form-control" name='usuario' [(ngModel)]="editarUsuario.usuario"
+                            placeholder="Ingrese el usuario" autocomplete="off" #ModificaUsuario="ngModel"
+                            [ngClass]='{"errorForm":(ModificaUsuario.touched || ModificaUsuario.dirty)&&ModificaUsuario.invalid }'
+                            required>
+                        <div *ngIf="ModificaUsuario.invalid && (ModificaUsuario.dirty || ModificaUsuario.touched) ">
+                            <div class="errorValidate" *ngIf="ModificaUsuario.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="message">
+                            {{message}}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Modificar Contraseña</label>
+                        <input type="password" class="form-control" name='password' id="passwordedit"
+                            [(ngModel)]="editarUsuario.password" placeholder="Modificar contraseña" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label for="perfil" [ngClass]='{"errorLabel": ModificarPerfil.invalid && (ModificarPerfil.dirty || ModificarPerfil.touched)}'>Modificar Perfil</label>
+                        <select class="form-control" name="perfil" id="perfiledit" [(ngModel)]="editarUsuario.perfil"
+                        #ModificarPerfil="ngModel"
+                        [ngClass]='{"errorForm":(ModificarPerfil.touched || ModificarPerfil.dirty)&&ModificarPerfil.invalid }'
+                        required>
+                            <option value="" selected disabled>-- Seleccione --</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Operador">Operador</option>
+                        </select>
+                        <div *ngIf="ModificarPerfil.invalid && (ModificarPerfil.dirty || ModificarPerfil.touched) ">
+                            <div class="errorValidate" *ngIf="ModificarPerfil.errors?.required">
+                                Proporcione un nombre válido.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!formModificarUser.form.valid">Modificar Usuario</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

@@ -1,0 +1,139 @@
+<div class="projects-section-header">
+    <h2>Tipo Implementos</h2>
+</div>
+
+<div class="card" id="Table">
+    <div class="card-header">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            style="border-radius: 20px !important; font-family: Arial, Helvetica, sans-serif;">
+            <i class="fas fa-plus-circle"></i> &nbsp; <strong>Agregar Tipo Implemento</strong>
+        </button>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Tipo de Implemento</strong></th>
+                        <th><strong>Acciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let tiposImplementos of tiposImplementos">
+                        <td> {{tiposImplementos.nombre}} </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-icon" type="button" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-h" data-toggle="tooltip" data-placement="top" title=""
+                                        data-original-title="Actions"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li>
+                                        <a class="dropdown-item" data-bs-toggle="modal"
+                                            data-bs-target="#EditTipoImplemento" href="#"
+                                            (click)="getTipo_Implemento(tiposImplementos.id)"><i
+                                                class="fas fa-pencil-alt" style="color: rgb(26, 25, 25);"></i> &nbsp;
+                                            <strong>Editar</strong> </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger"
+                                            (click)="deleteTipoImplemento(tiposImplementos.id)"
+                                            style="cursor: pointer;"><i class="fas fa-trash"
+                                                style="color: rgb(148, 21, 21);"></i>
+                                            &nbsp; <strong>Eliminar</strong></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form #formAddImplemento="ngForm" (ngSubmit)='addTipo_Implemento()'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Tipo de Implemento</h5>
+                    <button type="button" class="btn-close btn-close-add" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": addTipo_implemento.invalid && (addTipo_implemento.dirty || addTipo_implemento.touched)}'>Tipo
+                            Implemento</label>
+                        <input type="text" class="form-control" name='tipo_implemento'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="nuvoTipoImplemento.nombre"
+                            placeholder="Ingrese el Tipo Implemento" autocomplete="off" #addTipo_implemento="ngModel"
+                            [ngClass]='{"errorForm":(addTipo_implemento.touched || addTipo_implemento.dirty)&&addTipo_implemento.invalid }'
+                            required>
+                        <div
+                            *ngIf="addTipo_implemento.invalid && (addTipo_implemento.dirty || addTipo_implemento.touched) ">
+                            <div class="errorValidate" *ngIf="addTipo_implemento.errors?.required">
+                                Proporcione un tipo de implemento válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="errorMessage">
+                            {{errorMessage}}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="!formAddImplemento.form.valid">Guardar
+                        Tipo Implemento</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="EditTipoImplemento" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form #ModificarTipoImplemento="ngForm" (ngSubmit)='updateTipoImplemento()'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modificar Tipo de Implemento</h5>
+                    <button type="button" class="btn-close btn-close-edit" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"
+                            [ngClass]='{"errorLabel": modificarTipoImplemento.invalid && (modificarTipoImplemento.dirty || modificarTipoImplemento.touched)}'>Modificar
+                            Tipo Implemento</label>
+                        <input type="text" class="form-control" name='Edittipo_implemento'
+                            oninput="this.value=this.value.toUpperCase()" [(ngModel)]="editTipoImplemento.nombre"
+                            placeholder="Ingrese el Tipo Implemento" autocomplete="off"
+                            #modificarTipoImplemento="ngModel"
+                            [ngClass]='{"errorForm":(modificarTipoImplemento.touched || modificarTipoImplemento.dirty)&&modificarTipoImplemento.invalid }'
+                            required>
+                        <div
+                            *ngIf="modificarTipoImplemento.invalid && (modificarTipoImplemento.dirty || modificarTipoImplemento.touched) ">
+                            <div class="errorValidate" *ngIf="modificarTipoImplemento.errors?.required">
+                                Proporcione un tipo de implemento válido.
+                            </div>
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf="errorMessageEdit">
+                            {{errorMessageEdit}}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="!ModificarTipoImplemento.form.valid">Modificar Tipo Implemento</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
